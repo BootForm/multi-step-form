@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CHANGE ME: this is what shows in the browser tab and in Google results. -->
+<title>Project intake</title>
+<meta name="description" content="A 5-step project intake questionnaire, ending in a review and a real submission.">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+  /* CHANGE ME: your two colours. Everything else follows from these. */
+  @theme {
+    --color-ink: #1b1a17;
+    --color-paper: #fbf9f4;
+    --color-accent: #2f5d9a;
+  }
+</style>
+</head>
+
+<body class="bg-paper text-ink font-sans antialiased">
+
+  <div class="mx-auto max-w-xl px-6 py-16 sm:py-24">
+
+    <!-- ───── Header ───── -->
+    <header class="mb-10 flex flex-col gap-2">
+      <!-- CHANGE ME: your own title and intro. -->
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Tell us about your project</h1>
+      <p class="text-ink/70">Five short steps, a chance to check your answers, then send.</p>
+    </header>
+
+    <!-- ───── Progress ─────
+         A plain <div> width bound to the current step by JavaScript below, not a <progress>
+         element: <progress> can't be styled consistently enough across browsers for something
+         this visually central, and a styled div is simpler here than fighting that. -->
+    <div class="mb-8">
+      <div class="mb-2 flex items-center justify-between text-sm font-medium text-ink/60">
+        <span id="progress-label">Step 1 of 5</span>
+        <span id="progress-percent">20%</span>
+      </div>
+      <div class="h-2 overflow-hidden rounded-full bg-ink/10">
+        <div id="progress-bar" class="h-full rounded-full bg-accent transition-all duration-300" style="width: 20%"></div>
+      </div>
+    </div>
+
+    <!-- ───── The form ─────
+         Replace __YOUR_FORM_ID__ below with the ID you generate in step 3 of the README.
+         Everything else here already works.
+
+         Each step is a plain <div data-step> with `hidden` on every step but the first. A
+         `hidden` field is still checked by the browser's own constraint validation even though
+         it isn't visible (confirmed against a real DOM implementation while building this: a
+         `hidden` ancestor alone does not exempt a required field), so the script below
+         temporarily disables every field outside the current step before calling
+         `form.reportValidity()`, since a `disabled` field genuinely is excluded, then re-enables
+         them immediately after, whether or not validation passed. -->
+    <form id="wizard" action="https://f.bootform.com/__YOUR_FORM_ID__" method="POST" novalidate>
+
+      <!-- Step 1: what they need -->
+      <div data-step class="flex flex-col gap-4">
+        <fieldset class="flex flex-col gap-2">
+          <legend class="text-sm font-medium">What do you need?</legend>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="has-[:checked]:border-accent has-[:checked]:bg-accent/10 cursor-pointer rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium">
+              <input type="radio" name="project_type" value="website" class="sr-only" required checked>
+              Website
+            </label>
+            <label class="has-[:checked]:border-accent has-[:checked]:bg-accent/10 cursor-pointer rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium">
+              <input type="radio" name="project_type" value="branding" class="sr-only">
+              Branding
+            </label>
+            <label class="has-[:checked]:border-accent has-[:checked]:bg-accent/10 cursor-pointer rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium">
+              <input type="radio" name="project_type" value="marketing" class="sr-only">
+              Marketing
+            </label>
+            <label class="has-[:checked]:border-accent has-[:checked]:bg-accent/10 cursor-pointer rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium">
+              <input type="radio" name="project_type" value="other" class="sr-only">
+              Something else
+            </label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Step 2: budget and timeline -->
+      <div data-step hidden class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <label for="budget" class="text-sm font-medium">Budget range</label>
+          <select id="budget" name="budget" required
+                  class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none [color-scheme:light] focus:border-accent focus:ring-2 focus:ring-accent/25">
+            <option value="" disabled selected>Choose one</option>
+            <option value="under-1k">Under $1,000</option>
+            <option value="1k-5k">$1,000 - $5,000</option>
+            <option value="5k-plus">$5,000+</option>
+            <option value="not-sure">Not sure yet</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="target_date" class="text-sm font-medium">When do you want it live?</label>
+          <input id="target_date" name="target_date" type="date"
+                 class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none [color-scheme:light] focus:border-accent focus:ring-2 focus:ring-accent/25">
+        </div>
+      </div>
+
+      <!-- Step 3: about them -->
+      <div data-step hidden class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <label for="name" class="text-sm font-medium">Your name</label>
+          <input id="name" name="name" type="text" required
+                 class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-2 focus:ring-accent/25">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="email" class="text-sm font-medium">Your email</label>
+          <input id="email" name="email" type="email" required
+                 class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-2 focus:ring-accent/25">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="company" class="text-sm font-medium">Company <span class="font-normal text-ink/50">(optional)</span></label>
+          <input id="company" name="company" type="text"
+                 class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-2 focus:ring-accent/25">
+        </div>
+      </div>
+
+      <!-- Step 4: details -->
+      <div data-step hidden class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <label for="message" class="text-sm font-medium">Anything else we should know?</label>
+          <textarea id="message" name="message" rows="4"
+                    class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-2 focus:ring-accent/25"></textarea>
+        </div>
+      </div>
+
+      <!-- Step 5: confirmation. No new fields, just a read-only summary of steps 1-4 (built by
+           renderSummary() below, right before this step becomes visible) and the final Send
+           button, so the reader can catch a typo before it actually goes anywhere. -->
+      <div data-step hidden class="flex flex-col gap-4">
+        <h2 class="text-sm font-semibold uppercase tracking-widest text-ink/50">Review your answers</h2>
+        <dl id="summary" class="flex flex-col gap-3 rounded-lg border border-gray-300 bg-white p-4 text-sm"></dl>
+        <p class="text-sm text-ink/60">Go back to fix anything, or send it as it is.</p>
+      </div>
+
+      <!-- A spam trap. Real people never see it, bots fill it in. Leave it alone. -->
+      <input type="text" name="_honeypot" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+
+      <!-- ───── Step controls ───── -->
+      <div class="mt-8 flex items-center justify-between">
+        <button type="button" id="back-btn" hidden
+                class="rounded-lg px-5 py-2.5 font-medium text-ink/70 hover:text-ink">
+          Back
+        </button>
+        <div class="flex-1"></div>
+        <button type="button" id="next-btn"
+                class="rounded-lg bg-accent px-6 py-2.5 font-medium text-white! transition hover:opacity-90">
+          Next
+        </button>
+        <button type="submit" id="send-btn" hidden
+                class="rounded-lg bg-accent px-6 py-2.5 font-medium text-white! transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60">
+          Send
+        </button>
+      </div>
+
+      <p id="form-status" class="mt-4 text-sm" role="status"></p>
+    </form>
+
+    <footer class="mt-16 border-t border-ink/10 pt-8 text-sm text-ink/50">
+      Built with <a href="https://github.com/BootForm/multi-step-form" class="underline hover:text-accent">multi-step-form</a>.
+      The form runs on <a href="https://bootform.com" class="underline hover:text-accent">BootForm</a>.
+    </footer>
+
+  </div>
+
+<script>
+  const form = document.getElementById('wizard')
+  const steps = [...form.querySelectorAll('[data-step]')]
+  const backBtn = document.getElementById('back-btn')
+  const nextBtn = document.getElementById('next-btn')
+  const sendBtn = document.getElementById('send-btn')
+  const progressBar = document.getElementById('progress-bar')
+  const progressLabel = document.getElementById('progress-label')
+  const progressPercent = document.getElementById('progress-percent')
+  const status = document.getElementById('form-status')
+  const progressWrapper = document.getElementById('progress-label').closest('div').parentElement
+  const summary = document.getElementById('summary')
+
+  // CHANGE ME: a label for every field you want to show on the confirmation step, keyed by its
+  // `name` attribute, in the order they should appear. A field left out of this map (like the
+  // honeypot, deliberately) just doesn't appear in the summary; it's still included in the
+  // actual submission.
+  const SUMMARY_FIELDS = {
+    project_type: 'Project type',
+    budget: 'Budget',
+    target_date: 'Target date',
+    name: 'Name',
+    email: 'Email',
+    company: 'Company',
+    message: 'Details',
+  }
+
+  let current = 0
+
+  function render() {
+    steps.forEach((step, i) => { step.hidden = i !== current })
+    backBtn.hidden = current === 0
+    const onLastStep = current === steps.length - 1
+    nextBtn.hidden = onLastStep
+    sendBtn.hidden = !onLastStep
+    const percent = Math.round(((current + 1) / steps.length) * 100)
+    progressLabel.textContent = `Step ${current + 1} of ${steps.length}`
+    progressPercent.textContent = `${percent}%`
+    progressBar.style.width = `${percent}%`
+    if (onLastStep) renderSummary()
+  }
+
+  function renderSummary() {
+    const data = Object.fromEntries(new FormData(form))
+    summary.innerHTML = Object.entries(SUMMARY_FIELDS)
+      .filter(([key]) => data[key])
+      .map(([key, label]) => `
+        <div class="flex justify-between gap-4">
+          <dt class="shrink-0 text-ink/50">${label}</dt>
+          <dd class="text-right font-medium">${String(data[key]).replace(/</g, '&lt;')}</dd>
+        </div>
+      `)
+      .join('')
+  }
+
+  // A `hidden` field is still checked by the browser's own validation (only a `disabled` one is
+  // genuinely excluded), so validating just the step currently on screen means disabling every
+  // other step's fields first, checking, then always re-enabling them again, whether or not
+  // validation passed. See AGENTS.md for why this isn't simplified to a bare reportValidity call.
+  function fieldsOutside(stepEl) {
+    return steps.filter((s) => s !== stepEl).flatMap((s) => [...s.querySelectorAll('input, select, textarea')])
+  }
+
+  nextBtn.addEventListener('click', () => {
+    const otherFields = fieldsOutside(steps[current])
+    otherFields.forEach((field) => { field.disabled = true })
+    const valid = form.reportValidity()
+    otherFields.forEach((field) => { field.disabled = false })
+
+    if (!valid) return
+    current = Math.min(current + 1, steps.length - 1)
+    render()
+  })
+
+  backBtn.addEventListener('click', () => {
+    current = Math.max(current - 1, 0)
+    render()
+  })
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    if (!form.reportValidity()) return
+
+    sendBtn.disabled = true
+    sendBtn.textContent = 'Sending…'
+    status.textContent = ''
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
+      })
+      const result = await response.json()
+
+      if (result.ok) {
+        form.hidden = true
+        progressWrapper.hidden = true
+        status.textContent = "Thanks, that's everything we need. We'll be in touch soon."
+        status.classList.add('text-green-700')
+      } else {
+        status.textContent = result.error || 'Something went wrong. Please try again.'
+        status.setAttribute('role', 'alert')
+        status.classList.add('text-red-600')
+        sendBtn.disabled = false
+        sendBtn.textContent = 'Send'
+      }
+    } catch {
+      status.textContent = 'Something went wrong. Please try again.'
+      status.setAttribute('role', 'alert')
+      status.classList.add('text-red-600')
+      sendBtn.disabled = false
+      sendBtn.textContent = 'Send'
+    }
+  })
+
+  render()
+</script>
+
+</body>
+</html>
