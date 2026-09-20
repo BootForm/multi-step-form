@@ -260,7 +260,7 @@
       const response = await fetch(form.action, {
         method: 'POST',
         headers: { Accept: 'application/json' },
-        body: new FormData(form),
+        body: new URLSearchParams(new FormData(form)), // see AGENTS.md: FormData always sends multipart/form-data
       })
       const result = await response.json()
 

@@ -57,6 +57,23 @@ Back and forward again.
 purpose) is still submitted, it just doesn't appear in the review. Add a new entry there when you
 add a new field elsewhere, in the order you want it to appear.
 
+## Submission body must be `URLSearchParams`, not a raw `FormData`
+
+The submit handler builds its body with `new URLSearchParams(new FormData(form))`, not a bare
+`new FormData(form)`. This isn't a style choice: `fetch` picks the request's `Content-Type` from
+the *type* of the `body` value, not from whether the form actually has a file input, and a raw
+`FormData` object always serializes as `multipart/form-data`, even when every field in it is
+plain text. BootForm rejects any `multipart/form-data` submission to a form that hasn't been
+claimed yet (`422 FORM_NOT_CLAIMED`), regardless of whether a real file is attached, specifically
+to block anonymous file-storage abuse. This form has no file input anywhere in any step, so
+`URLSearchParams` (which always sends `application/x-www-form-urlencoded`) is the unconditionally
+correct choice here, and reads every field out of the `FormData` the same way `renderSummary()`
+already does.
+
+**If you ever add a file input to a step**, switch that one submission back to a raw `FormData`
+and tell the reader in the README that the form must be claimed first, the same warning
+`contact-form-recipes`' own file-upload example gives.
+
 ## The form
 
 The `action` ships as the literal placeholder `https://f.bootform.com/__YOUR_FORM_ID__`.
