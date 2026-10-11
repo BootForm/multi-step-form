@@ -61,9 +61,16 @@ add a new field elsewhere, in the order you want it to appear.
 
 The `action` ships as the literal placeholder `https://f.bootform.com/__YOUR_FORM_ID__`.
 
-**Never replace it with a real form ID.** A form ID is the entire claim credential: whoever claims
-one first owns it permanently, and every fork then delivers its visitors' messages to that person.
-The reader generates their own in step 3 of the README.
+**In this template repo (`github.com/BootForm/multi-step-form`), it stays the placeholder.** A form ID is the
+entire claim credential: whoever claims one first owns it permanently, and every copy of the
+template would then deliver its visitors' messages to that person.
+
+**In a copy of the template (someone's own site), the opposite applies.** Putting the owner's own
+form ID in the `action` is step 3 of the README, and it is how their form starts working. If
+the `action` already holds a real ID, it is theirs: keep it, and never change it back to the
+placeholder. Only ever use an ID the owner generated (never one from a doc, a tutorial or another
+site). To tell which case you are in, run `git remote get-url origin`: only the template itself
+points at `BootForm/multi-step-form`.
 
 The honeypot input (`_honeypot`) must stay, hidden and unlabelled to screen readers.
 
