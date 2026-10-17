@@ -72,7 +72,7 @@ placeholder. Only ever use an ID the owner generated (never one from a doc, a tu
 site). To tell which case you are in, run `git remote get-url origin`: only the template itself
 points at `BootForm/multi-step-form`.
 
-The honeypot input (`bform_website`) must stay, hidden and unlabelled to screen readers.
+The honeypot input, named `honeypot`, must stay, hidden and unlabelled to screen readers.
 
 Submission is AJAX (`fetch`, `Accept: application/json`), not a plain form POST that navigates
 away: a multi-step form's whole point is staying on one page, so leaving it after all that effort
