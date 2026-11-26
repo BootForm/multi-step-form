@@ -131,6 +131,12 @@ starts with `hidden`.
 **"This form has reached its limit of 10 held submissions."** You tested it more than ten times
 before claiming. Claim the form and the limit goes away.
 
+## Like it?
+
+If this saved you some time, a star on this repo helps other people find it. Everything else
+BootForm publishes is at [github.com/BootForm](https://github.com/BootForm): more templates, form
+styles and page sections, all free to copy.
+
 ## Licence
 
 MIT. Do whatever you like with it, including using it for a real business.
