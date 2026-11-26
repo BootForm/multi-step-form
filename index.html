@@ -158,9 +158,11 @@
           Send
         </button>
       </div>
-
-      <p id="form-status" class="mt-4 text-sm" role="status"></p>
     </form>
+
+    <!-- Outside the form on purpose: the form is hidden after a successful send, and anything
+         inside it would be hidden too, including this thank-you message. -->
+    <p id="form-status" class="mt-4 text-sm" role="status"></p>
 
     <footer class="mt-16 border-t border-ink/10 pt-8 text-sm text-ink/50">
       Built with <a href="https://github.com/BootForm/multi-step-form" class="underline hover:text-accent">multi-step-form</a>.
